@@ -1,0 +1,21 @@
+apiVersion: skaffold/v2alpha3
+kind: Config
+deploy:
+  kubectl:
+    manifests:
+      - ./infra/k8s/*
+build:
+  local:
+    # dont push the image to docker hub
+    push: false
+    # all the things that need to be build
+  artifacts:
+    - image: hamzahhameed9797/auth
+      context: auth
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        # all files skaffold want to watch
+        manual:
+          - src: "src/**/*.ts"
+            dest: .
