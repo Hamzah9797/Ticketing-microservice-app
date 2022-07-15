@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-mongo-depl
+spec:
+  replicas: 1
+  # slector is how the deployment will find the pods it will create
+  selector:
+    matchLabels:
+      app: auth-mongo
+  # template is how to create each individual pod in this deployment
+  template:
+    metadata:
+      labels:
+        app: auth-mongo
+    spec:
+      containers:
+        - name: auth-mongo
+          # htis image already exists on docker hub
+          image: mongo
+---
+# service - deaafult type for service is cluster ip service
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth-mongo-srv
+spec:
+  selector:
+    # which pods you are going to govern , the ones with name auth-mongo
+    app: auth-mongo
+  ports:
+    - name: db
+      protocol: TCP
+      port: 27017
+      targetPort: 27017
